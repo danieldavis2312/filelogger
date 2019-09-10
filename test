@@ -1,0 +1,103 @@
+#Works!
+
+import tkinter as tk
+from functools import partial
+from tkinter.messagebox import showerror
+
+def call_result(label_result, n1, n2, n3, n4, n5, n6, label_result2, label_result3):
+#get numbers
+    num1 = n1.get()
+    num2 = n2.get()
+    num3 = n3.get()
+    num4 = n4.get()
+    num5 = n5.get()
+    num6 = n6.get()
+
+#If cells are Blank
+    if  str(num1) == '' or str(num2) == '' or str(num3) == ''or str(num4) == '' or str(num5) == '' or str(num6) == '':
+        label_result.config(text = "Blank Box requires input", fg = "red")
+        label_result2.config(text = "", fg = "red")
+        label_result3.config(text = "", fg = "red")
+        print("Blank Box")
+        return
+    else:
+#If numbers are too large
+        if float(num1) > 359 or float(num4) > 359 or float(num2)> 59 or float(num3) >59 or float(num5) > 59 or float(num6)> 59:
+            #showerror(title = "error", message = "Input than 360 or 60")
+            label_result.config(text = "Input Value > 360 or 60", fg = "red")
+            label_result2.config(text = "", fg = "red")
+            label_result3.config(text = "", fg = "red")
+            #print("Larger than 360 pr 60")
+            return
+        else:
+#calculate DMS
+            num2A = float(num2)/60
+            num3A = float(num3)/3600
+            num5A = float(num5)/60
+            num6A = float(num6)/3600
+    
+            LSide = float(num1)+float(num2A)+float(num3A)
+            RSide = float(num4)+float(num5A)+float(num6A)
+            DResult = (LSide+RSide)/2
+    
+            Degrees = int(DResult)
+            Minutes = int((DResult-Degrees)*60)
+            Seconds = ((((DResult-Degrees)*60)-(Minutes))*60)
+            label_result.config(text= Degrees, fg = 'Black')
+            label_result2.config(text = Minutes, fg = 'Black')
+            label_result3.config(text = "%.2f" % Seconds, fg = 'Black')
+    return
+
+root = tk.Tk()
+root.geometry('600x200+100+200')
+root.title('DMS Average Calculator')
+
+number1 = tk.StringVar()
+number2 = tk.StringVar()
+number3 = tk.StringVar()
+number4 = tk.StringVar()
+number5 = tk.StringVar()
+number6 = tk.StringVar()
+
+#Title
+labelTitle = tk.Label(root, text="").grid(row=0, column=0)
+
+#Line 1
+labelNum1 = tk.Label(root, text="Left Hand Side").grid(row=1, column=0)
+labelNum2 = tk.Label(root, text=u'\N{DEGREE SIGN}').grid(row=1, column=2)
+LabelNum3 = tk.Label(root, text="'").grid(row=1, column=4)
+LabelNum4 = tk.Label(root, text="''",width=7, anchor="w").grid(row=1, column=6)
+entryNum1 = tk.Entry(root, textvariable=number1, justify="right").grid(row=1, column=1)
+entryNum2 = tk.Entry(root, textvariable=number2, justify="right").grid(row=1, column=3)
+entryNum3 = tk.Entry(root, textvariable=number3, justify="right").grid(row=1, column=5)
+
+#Line 2
+labelNum1 = tk.Label(root, text="Right Hand Side").grid(row=2, column=0)
+labelNum2 = tk.Label(root, text=u'\N{DEGREE SIGN}').grid(row=2, column=2)
+LabelNum3 = tk.Label(root, text="'").grid(row=2, column=4)
+LabelNum4 = tk.Label(root, text="''",width=7, anchor="w").grid(row=2, column=6)
+entryNum1 = tk.Entry(root, textvariable=number4, justify="right").grid(row=2, column=1)
+entryNum2 = tk.Entry(root, textvariable=number5, justify="right").grid(row=2, column=3)
+entryNum3 = tk.Entry(root, textvariable=number6, justify="right").grid(row=2, column=5)
+
+#Line 3
+labelResult = tk.Label(root, width=18, anchor="e")
+labelResult.grid(row=4, column=1)
+
+labelResult2 = tk.Label(root, width=18, anchor="e")
+labelResult2.grid(row=4, column=3)
+
+labelResult3 = tk.Label(root, width=18, anchor="e")
+labelResult3.grid(row=4, column=5)
+
+LabelNum2 = tk.Label(root, text=u'\N{DEGREE SIGN}').grid(row=4, column=2)
+LabelNum3 = tk.Label(root, text="'").grid(row=4, column=4)
+LabelNum4 = tk.Label(root, text="''",width=7, anchor="w").grid(row=4, column=6)
+
+
+call_result = partial(call_result, labelResult, number1, number2,
+                      number3, number4, number5, number6, labelResult2, labelResult3,)
+buttonCal = tk.Button(root, text="Calculate", command=call_result).grid(row=3, column=6)
+
+root.mainloop()
+
